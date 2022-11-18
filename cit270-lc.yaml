@@ -29,8 +29,20 @@ spec:
           limits:
             cpu: 0.125
             memory: 600Mi
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
       volumes:
       - name: ssl
         secret: 
           secretName: ssl.secret.logan
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: loggs44-loadbalancer
+spec:
+  selector: 
+    app: loggs44
+  type: LoadBalancer
+  ports:
+  - port: 443
+    targetPort: 443
