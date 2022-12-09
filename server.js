@@ -9,17 +9,17 @@ const {createClient} = require('redis');
 const md5 = require('md5');
 let loginAttemptCount = {};
 
-const redisClient = createClient(
-    {
-    url:'redis://localhost:6379',
-    }
-);
-
 // const redisClient = createClient(
 //     {
-//     url:`redis://default:${process.env.REDIS_PASS}@redis-stedi-logan:6379`,
+//     url:'redis://localhost:6379',
 //     }
 // );
+
+const redisClient = createClient(
+    {
+    url:`redis://default:${process.env.REDIS_PASS}@redis-stedi-logan:6379`,
+    }
+);
 
 // app.listen(port, async ()=>{
 //     await redisClient.connect();
@@ -40,8 +40,13 @@ https.createServer({
     ca: fs.readFileSync('./SSL/chain.pem')
 
 }, app).listen(port, async () => {
-    await redisClient.connect();
-    console.log('Listening...')
+    console.log("listening...");
+    try{
+        await redisClient.connect();
+        console.log('Listening...');}
+        catch(error){
+            console.log(error)
+    }
 });
 
 app.post('/user', async (req,res)=>{
